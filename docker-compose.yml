@@ -1,0 +1,19 @@
+version: '3'
+services:
+  node:
+    image: 'node:lts'
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    volumes:
+      - ${PWD}:/var/www/app
+    working_dir: /var/www/app
+    links:
+      - immudb
+    command: bash -c "rm -rf dist && yarn run start:dev"
+  immudb:
+    image: 'codenotary/immudb:1.2.1'
+    volumes:
+      - 'immudb-data:/var/lib/immudb'
+volumes:
+  immudb-data:
+    driver: local

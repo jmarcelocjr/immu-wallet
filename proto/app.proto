@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package immuWallet;
+
+service ImmuWallet {
+    rpc RegisterWallet (Wallet) returns (Response) {}
+    rpc GetWallets (User) returns (WalletList) {}
+    rpc GetWallet (Wallet) returns (Wallet) {}
+    rpc Transfer (Transfer) returns (Response) {}
+    rpc GetTransactions (Wallet) returns (stream Transaction) {}
+}
+
+message User {
+    int32 id = 1;
+}
+
+message Wallet {
+    int32 user_id = 1;
+    string token = 2;
+    int32 balance = 3;
+}
+
+message Transfer {
+    Wallet from = 1;
+    Wallet to = 2;
+    int32 value = 3;
+    string description = 4;
+}
+
+message Transaction {
+    Wallet from = 1;
+    Wallet to = 2;
+    int32 value = 3;
+    string description = 4;
+}
+
+message WalletList {
+    repeated Wallet wallets = 1;
+}
+
+message Response {
+    bool success = 1;
+    string message = 2;
+}
