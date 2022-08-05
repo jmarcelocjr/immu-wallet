@@ -23,7 +23,5 @@ export class TransactionService {
       value: transaction.value,
       description: transaction.description,
     });
-
-    return null;
   }
 }

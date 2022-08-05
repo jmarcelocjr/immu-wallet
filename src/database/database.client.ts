@@ -8,7 +8,6 @@ export class DatabaseClient<T> {
     private client?: ImmudbClient;
 
     async getClient(): Promise<ImmudbClient> {
-        console.log('being called');
         if (this.client instanceof ImmudbClient) {
             return this.client;
         }
@@ -27,16 +26,7 @@ export class DatabaseClient<T> {
     async create(table_name: string, params: ObjectValue<SQLValue>): Promise<boolean> {
         let sql = `INSERT INTO ${table_name} (${Object.keys(params).join(',')}) VALUES (@${Object.keys(params).join(', @')})`;
 
-        const client = await this.getClient();
-
-        return client.SQLExec({
-            sql: sql,
-            params: params
-        }).then(() => true)
-        .catch(error => {
-            console.log(error);
-            return false;
-        });
+        return this.exec(sql, params);
     }
 
     async update(table_name: string, params: ObjectValue<SQLValue>, where: FindParameter<SQLValue>|FindParameter<SQLValue>[]): Promise<boolean> {
@@ -45,28 +35,20 @@ export class DatabaseClient<T> {
 
         let sql = `UPDATE ${table_name} SET ${paramsSql.join(' , ')} WHERE ${result.whereSql}`;
 
-        const client = await this.getClient();
-
-        return client.SQLExec({
-            sql: sql,
-            params: { ...params, ...result.params }
-        }).then(() => true)
-        .catch(error => {
-            console.log(error);
-            return false;
-        });
+        return this.exec(
+            sql,
+            { ...params, ...result.params }
+        );
     }
 
     async findOneBy(table_name: string, where: FindParameter<SQLValue>|FindParameter<SQLValue>[]): Promise<T> {
         const {whereSql, params} = this.mapWhere(where);
 
         const sql = `SELECT * FROM ${table_name} WHERE ${whereSql}`;
-
-        const client = await this.getClient();
-        const result = await client.SQLQuery({
+        const result = await this.query(
             sql,
             params
-        });
+        );
 
         return result.shift() as unknown as T;
     }
@@ -75,14 +57,27 @@ export class DatabaseClient<T> {
         const {whereSql, params} = this.mapWhere(where);
 
         const sql = `SELECT * FROM ${table_name} WHERE ${whereSql}`;
+        const result = await this.query(sql, params);
 
-        const client = await this.getClient();
-        const result = await client.SQLQuery({
+        return result as unknown as T[];
+    }
+
+    async exec(sql: string, params: ObjectValue<SQLValue>): Promise<boolean> {
+        return (await this.getClient()).SQLExec({
+            sql,
+            params
+        }).then(() => true)
+        .catch(error => {
+            console.log(error);
+            return false;
+        });
+    }
+
+    async query(sql: string, params: ObjectValue<SQLValue>): Promise<any> {
+        return (await this.getClient()).SQLQuery({
             sql,
             params
         });
-
-        return result as unknown as T[];
     }
 
     private mapWhere(where: FindParameter<SQLValue>|FindParameter<SQLValue>[]): {whereSql: string, params: ObjectValue<SQLValue>} {
@@ -128,7 +123,7 @@ export class DatabaseClient<T> {
         }
     }
 
-    private getOperator(operator_name: OperatorType) {
+    private getOperator(operator_name: OperatorType): string {
         switch (operator_name) {
             case "$equal":
                 return `=`;
