@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TransactionModule } from './transactions/transaction.module';
-import { TransferModule } from './transfer/transfer.module';
+import { TransferModule } from './transfers/transfer.module';
 import { WalletModule } from './wallets/wallet.module';
 
 @Module({

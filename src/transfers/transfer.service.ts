@@ -11,8 +11,10 @@ export class TransferService {
   ) {}
 
   async transfer(transfer: Transfer): Promise<boolean> {
-    const from_wallet = await this.wallet_service.get(transfer.from);
-    const to_wallet = await this.wallet_service.get(transfer.to);
+    const [from_wallet, to_wallet] = await Promise.all([
+      this.wallet_service.get(transfer.from),
+      this.wallet_service.get(transfer.to)
+    ]);
 
     if (typeof from_wallet == 'undefined' || typeof to_wallet == 'undefined') {
       throw new Error('from or to wallet not found');
