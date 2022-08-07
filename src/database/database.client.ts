@@ -84,7 +84,7 @@ export class DatabaseClient<T> {
         });
     }
 
-    private mapWhere(where: FindParameter<SQLValue>|FindParameter<SQLValue>[]): {whereSql: string, params: ObjectValue<SQLValue>} {
+    mapWhere(where: FindParameter<SQLValue>|FindParameter<SQLValue>[]): {whereSql: string, params: ObjectValue<SQLValue>} {
         let params = {};
         let whereSql = '';
 
