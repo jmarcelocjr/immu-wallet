@@ -20,6 +20,10 @@ export class DatabaseClient<T> {
             database: process.env.IMMUDB_DATABASE
         });
 
+        this.client.useDatabase({
+            databasename: process.env.IMMUDB_DATABASE
+        });
+
         return this.getClient();
     }
 
