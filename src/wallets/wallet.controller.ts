@@ -1,6 +1,6 @@
-import { Controller, Inject } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { Response, User, Wallet, WalletList } from 'src/common/immu_wallet.dto';
+import { Response, User, Wallet, WalletList } from 'src/common/immuWallet.dto';
 import { WalletService } from './wallet.service';
 
 @Controller()

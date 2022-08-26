@@ -12,7 +12,7 @@ async function bootstrap() {
       options: {
         url: process.env.GRPC_URL,
         package: 'immuWallet',
-        protoPath: join(__dirname, '/../proto/app.proto'),
+        protoPath: join(__dirname, '/../../proto/app.proto'),
         loader: { keepCase: true },
         credentials: null,
       },

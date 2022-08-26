@@ -1,5 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Transfer, Wallet } from 'src/common/immu_wallet.dto';
+import { Injectable } from '@nestjs/common';
+import { Transfer } from 'src/common/immuWallet.dto';
 import { TransactionService } from 'src/transactions/transaction.service';
 import { WalletService } from 'src/wallets/wallet.service';
 

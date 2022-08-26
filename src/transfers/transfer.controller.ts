@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { Response, Transfer } from 'src/common/immu_wallet.dto';
+import { Response, Transfer } from 'src/common/immuWallet.dto';
 import { TransferService } from './transfer.service';
 
 @Controller()

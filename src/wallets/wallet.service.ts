@@ -1,6 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import ImmudbClient from 'immudb-node';
-import { User, Wallet } from 'src/common/immu_wallet.dto';
+import { Injectable } from '@nestjs/common';
+import { User, Wallet } from 'src/common/immuWallet.dto';
 import { DatabaseClient } from 'src/database/database.client';
 
 @Injectable()
