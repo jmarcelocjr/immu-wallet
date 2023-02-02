@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from 'src/database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Wallet } from 'src/entities/Wallet.entity';
 import { WalletController } from './wallet.controller';
 import { WalletService } from './wallet.service';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forFeature([Wallet])],
   controllers: [WalletController],
   providers: [WalletService],
   exports: [WalletService],

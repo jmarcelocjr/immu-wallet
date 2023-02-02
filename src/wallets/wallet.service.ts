@@ -1,44 +1,53 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { User, Wallet } from 'src/common/immuWallet.dto';
-import { DatabaseClient } from 'src/database/database.client';
+import { Wallet as WalletEntity } from 'src/entities/Wallet.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class WalletService {
-  private table_name = 'wallets';
 
-  constructor(private readonly db: DatabaseClient<Wallet>) {}
+  constructor(
+    @InjectRepository(WalletEntity)
+    private readonly wallet_repository: Repository<WalletEntity>) {}
 
   async getAll(user: User): Promise<Wallet[]> {
-    return this.db.findBy(this.table_name, {
-      user_id: user.id
+    const wallets = await this.wallet_repository.findBy({
+      user: user
     });
 
+    return wallets.map(wallet => wallet.toProto());
   }
 
   async get(wallet: Wallet): Promise<Wallet> {
-    return this.db.findOneBy(this.table_name, {
-      user_id: wallet.user_id,
+    const wallet_entity = await this.wallet_repository.findOneBy({
+      user: { id: wallet.user_id },
       token: wallet.token
     });
+
+    return wallet_entity.toProto();
   }
 
   async create(wallet: Wallet): Promise<boolean> {
-    return this.db.create(this.table_name, {
-      user_id: wallet.user_id,
-      token: wallet.token,
-      balance: 0
-    });
+    const wallet_entity = this.wallet_repository.create();
+    wallet_entity.token = wallet.token;
+    wallet_entity.balance = 0;
+    wallet_entity.user = { id: wallet.user_id };
+
+    await this.wallet_repository.save(wallet_entity);
+
+    return true;
   }
 
   async update(wallet: Wallet): Promise<boolean> {
-    return this.db.update(
-      this.table_name,
-      {
-        balance: wallet.balance
-      },
-      {
-        id: wallet.id
-      }
-    );
+    const wallet_entity = await this.wallet_repository.findOneBy({
+      id: wallet.id
+    });
+
+    wallet_entity.balance = wallet.balance;
+
+    await this.wallet_repository.save(wallet_entity);
+
+    return true;
   }
 }
