@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Transfer } from 'src/common/immuWallet.dto';
 import { TransactionService } from 'src/transactions/transaction.service';
 import { WalletService } from 'src/wallets/wallet.service';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class TransferService {
   constructor(
     private readonly wallet_service: WalletService,
-    private readonly transaction_service: TransactionService,
+    private readonly transaction_service: TransactionService
   ) {}
 
   async transfer(transfer: Transfer): Promise<boolean> {
@@ -28,12 +29,10 @@ export class TransferService {
       throw new Error("from wallet balance isn't enough for this transaction");
     }
 
-    from_wallet.balance -= transfer.value;
-    to_wallet.balance += transfer.value;
+    this.wallet_service.withdraw(from_wallet.id, transfer.value);
 
     const results = await Promise.all([
-      this.wallet_service.update(from_wallet),
-      this.wallet_service.update(to_wallet),
+      this.wallet_service.deposit(to_wallet.id, transfer.value),
       this.transaction_service.create(transfer),
     ]);
 

@@ -39,15 +39,31 @@ export class WalletService {
     return true;
   }
 
-  async update(wallet: Wallet): Promise<boolean> {
+  async deposit(id: number, value: number): Promise<number> {
     const wallet_entity = await this.wallet_repository.findOneBy({
-      id: wallet.id
+      id: id
     });
 
-    wallet_entity.balance = wallet.balance;
+    wallet_entity.balance += value;
 
     await this.wallet_repository.save(wallet_entity);
 
-    return true;
+    return wallet_entity.balance;
+  }
+
+  async withdraw(id: number, value: number): Promise<number> {
+    const wallet_entity = await this.wallet_repository.findOneBy({
+      id: id
+    });
+
+    if (wallet_entity.balance < value) {
+      throw new Error(`wallet #${wallet_entity.id} balance isn't enough for this transaction`);
+    }
+
+    wallet_entity.balance -= value;
+
+    await this.wallet_repository.save(wallet_entity);
+
+    return wallet_entity.balance;
   }
 }
