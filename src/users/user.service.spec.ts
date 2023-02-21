@@ -28,9 +28,6 @@ describe('UserService', () => {
   });
 
   it('should create an user', async () => {
-    // jest.spyOn(user_service, 'get').mockImplementation(async () => undefined);
-    // jest.spyOn(user_service, 'create').mockImplementation(async () => true);
-
     const result = await user_service.create({
         id: 1
     });

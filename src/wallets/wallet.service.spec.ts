@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { Test } from '@nestjs/testing';
 import { WalletService } from './wallet.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,12 +14,9 @@ describe('WalletService', () => {
       imports: [
           TypeOrmModule.forFeature([Wallet, User]),
           TypeOrmModule.forRoot({
-            type: 'mysql',
-            host: process.env.DB_HOST,
-            port: parseInt(process.env.DB_PORT),
-            username: process.env.DB_USERNAME,
-            password: process.env.DB_PASSWORD,
-            database: 'test',
+            type: 'sqlite',
+            database: ':memory:',
+            dropSchema: true,
             entities: [__dirname + '/../entities/*.entity.{js,ts}'],
             synchronize: true,
           })
@@ -39,9 +35,6 @@ describe('WalletService', () => {
   });
 
   it('should create a wallet', async () => {
-    // jest.spyOn(wallet_service, 'get').mockImplementation(async () => undefined);
-    // jest.spyOn(wallet_service, 'create').mockImplementation(async () => true);
-
     const result = await wallet_service.create({
         user_id: user.id,
         token: "BRL"
