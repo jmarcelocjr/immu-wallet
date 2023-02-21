@@ -8,12 +8,17 @@ services:
       - ${PWD}:/var/www/app
     working_dir: /var/www/app
     links:
-      - immudb
+      - mysql
     command: bash -c "rm -rf dist && yarn run start:dev"
-  immudb:
-    image: 'codenotary/immudb:1.2.1'
+  mysql:
+    image: 'mysql:8'
     volumes:
-      - 'immudb-data:/var/lib/immudb'
+      - 'db-data:/var/lib/mysql'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
 volumes:
-  immudb-data:
+  db-data:
     driver: local

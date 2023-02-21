@@ -1,11 +1,15 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Response, User, Wallet, WalletList } from 'src/common/immuWallet.dto';
+import { UserService } from 'src/users/user.service';
 import { WalletService } from './wallet.service';
 
 @Controller()
 export class WalletController {
-  constructor(private wallet_service: WalletService) {}
+  constructor(
+    private wallet_service: WalletService,
+    private user_service: UserService
+  ) {}
 
   @GrpcMethod('ImmuWallet')
   getWallet(wallet: Wallet): Promise<Wallet> {
@@ -29,6 +33,10 @@ export class WalletController {
         message: 'Already created',
       };
     }
+
+    await this.user_service.create({
+      id: wallet.user_id
+    });
 
     const result = await this.wallet_service.create(wallet);
 
