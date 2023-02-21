@@ -11,6 +11,7 @@ export class TransactionService {
   constructor(
     @InjectRepository(WalletEntity)
     private readonly wallet_repository: Repository<WalletEntity>,
+    @InjectRepository(TransactionEntity)
     private readonly transaction_repository: Repository<TransactionEntity>,
     private data_source: DataSource) {}
 

@@ -1,9 +1,9 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { Wallet } from "./Wallet.entity";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     id: number;
 
     @OneToMany(() => Wallet, (wallet) => wallet.user)

@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionModule } from './transactions/transaction.module';
 import { TransferModule } from './transfers/transfer.module';
+import { UserModule } from './users/user.module';
 import { WalletModule } from './wallets/wallet.module';
 
 @Module({
   imports: [
+    UserModule,
     WalletModule,
     TransferModule,
     TransactionModule,

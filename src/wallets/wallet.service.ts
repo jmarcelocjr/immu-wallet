@@ -19,13 +19,13 @@ export class WalletService {
     return wallets.map(wallet => wallet.toProto());
   }
 
-  async get(wallet: Wallet): Promise<Wallet> {
+  async get(wallet: Wallet): Promise<Wallet | undefined> {
     const wallet_entity = await this.wallet_repository.findOneBy({
       user: { id: wallet.user_id },
       token: wallet.token
     });
 
-    return wallet_entity.toProto();
+    return wallet_entity.toProto() ?? undefined;
   }
 
   async create(wallet: Wallet): Promise<boolean> {
