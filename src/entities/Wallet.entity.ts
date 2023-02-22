@@ -14,7 +14,7 @@ export class Wallet {
     @Column()
     balance: number;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, { eager: true })
     user: User;
 
     @OneToMany(() => Transaction, transaction => transaction.wallet)
